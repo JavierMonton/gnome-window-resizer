@@ -9,26 +9,26 @@
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 export default class WindowResizerExtension extends Extension {
     // Track current size index per window (using window's stable_sequence)
     _windowSizeIndex = new Map();
-    
+
     // Store keybinding action names for cleanup
     _keybindingActions = [];
-    
+
     enable() {
         this._settings = this.getSettings();
-        
+
         // Connect to settings changes
         this._settingsChangedId = this._settings.connect('changed::size-presets', () => {
             this._onSizesChanged();
         });
-        
+
         // Register all keybindings
         this._registerKeybindings();
-        
+
         console.log('[Window Resizer] Extension enabled');
     }
 
@@ -38,20 +38,20 @@ export default class WindowResizerExtension extends Extension {
             this._settings.disconnect(this._settingsChangedId);
             this._settingsChangedId = null;
         }
-        
+
         // Remove all keybindings
         this._unregisterKeybindings();
-        
+
         // Clear state
         this._windowSizeIndex.clear();
         this._settings = null;
-        
+
         console.log('[Window Resizer] Extension disabled');
     }
 
     _registerKeybindings() {
         const mode = Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW;
-        
+
         // Cycle forward (next)
         Main.wm.addKeybinding(
             'cycle-next',
@@ -61,7 +61,7 @@ export default class WindowResizerExtension extends Extension {
             () => this._cycleSize(1)
         );
         this._keybindingActions.push('cycle-next');
-        
+
         // Cycle backward (previous)
         Main.wm.addKeybinding(
             'cycle-previous',
@@ -71,7 +71,7 @@ export default class WindowResizerExtension extends Extension {
             () => this._cycleSize(-1)
         );
         this._keybindingActions.push('cycle-previous');
-        
+
         // Direct size shortcuts (1-9)
         for (let i = 1; i <= 9; i++) {
             const keyName = `size-${i}`;
@@ -84,6 +84,26 @@ export default class WindowResizerExtension extends Extension {
             );
             this._keybindingActions.push(keyName);
         }
+
+        // Increment increase
+        Main.wm.addKeybinding(
+            'increment-increase',
+            this._settings,
+            Meta.KeyBindingFlags.NONE,
+            mode,
+            () => this._incrementSize(1)
+        );
+        this._keybindingActions.push('increment-increase');
+
+        // Increment decrease
+        Main.wm.addKeybinding(
+            'increment-decrease',
+            this._settings,
+            Meta.KeyBindingFlags.NONE,
+            mode,
+            () => this._incrementSize(-1)
+        );
+        this._keybindingActions.push('increment-decrease');
     }
 
     _unregisterKeybindings() {
@@ -100,7 +120,7 @@ export default class WindowResizerExtension extends Extension {
     _getSizes() {
         const sizeStrings = this._settings.get_strv('size-presets');
         const sizes = [];
-        
+
         for (const str of sizeStrings) {
             const match = str.match(/^(\d+)x(\d+)$/);
             if (match) {
@@ -110,7 +130,7 @@ export default class WindowResizerExtension extends Extension {
                 });
             }
         }
-        
+
         return sizes;
     }
 
@@ -120,16 +140,16 @@ export default class WindowResizerExtension extends Extension {
      */
     _getFocusedWindow() {
         const window = global.display.focus_window;
-        
+
         if (!window) {
             return null;
         }
-        
+
         // Only resize normal windows (not dialogs, menus, etc.)
         if (window.get_window_type() !== Meta.WindowType.NORMAL) {
             return null;
         }
-        
+
         return window;
     }
 
@@ -152,16 +172,16 @@ export default class WindowResizerExtension extends Extension {
             this._showNotification('No window focused');
             return;
         }
-        
+
         const sizes = this._getSizes();
         if (sizes.length === 0) {
             this._showNotification('No sizes configured');
             return;
         }
-        
+
         const windowId = this._getWindowId(window);
         let currentIndex = this._windowSizeIndex.get(windowId) ?? -1;
-        
+
         // Calculate next index with wrapping
         currentIndex = currentIndex + direction;
         if (currentIndex >= sizes.length) {
@@ -169,10 +189,10 @@ export default class WindowResizerExtension extends Extension {
         } else if (currentIndex < 0) {
             currentIndex = sizes.length - 1;
         }
-        
+
         // Store the new index
         this._windowSizeIndex.set(windowId, currentIndex);
-        
+
         // Apply the size
         this._applySize(window, sizes[currentIndex]);
     }
@@ -187,17 +207,41 @@ export default class WindowResizerExtension extends Extension {
             this._showNotification('No window focused');
             return;
         }
-        
+
         const sizes = this._getSizes();
         if (index >= sizes.length) {
             this._showNotification(`Size ${index + 1} not configured`);
             return;
         }
-        
+
         const windowId = this._getWindowId(window);
         this._windowSizeIndex.set(windowId, index);
-        
+
         this._applySize(window, sizes[index]);
+    }
+
+    /**
+     * Increment or decrement window size by configured amounts
+     * @param {number} direction - 1 for increase, -1 for decrease
+     */
+    _incrementSize(direction) {
+        const window = this._getFocusedWindow();
+        if (!window) {
+            this._showNotification('No window focused');
+            return;
+        }
+
+        const widthIncrement = this._settings.get_int('increment-width');
+        const heightIncrement = this._settings.get_int('increment-height');
+
+        // Get current size
+        const rect = window.get_frame_rect();
+
+        // Calculate new size
+        const newWidth = Math.max(100, rect.width + (widthIncrement * direction));
+        const newHeight = Math.max(100, rect.height + (heightIncrement * direction));
+
+        this._applySize(window, { width: newWidth, height: newHeight });
     }
 
     /**
@@ -210,10 +254,10 @@ export default class WindowResizerExtension extends Extension {
         if (window.get_maximized()) {
             window.unmaximize(Meta.MaximizeFlags.BOTH);
         }
-        
+
         // Get current position to keep the window in place
         const rect = window.get_frame_rect();
-        
+
         // Resize the window (keep current position)
         window.move_resize_frame(
             false, // user_op
@@ -222,7 +266,7 @@ export default class WindowResizerExtension extends Extension {
             size.width,
             size.height
         );
-        
+
         console.log(`[Window Resizer] Resized to ${size.width}x${size.height}`);
     }
 

@@ -78,6 +78,31 @@
             <description>Keyboard shortcut to resize the focused window to the ninth predefined size</description>
         </key>
 
+        <!-- Incremental Resize Settings -->
+        <key name="increment-width" type="i">
+            <default>50</default>
+            <summary>Width Increment</summary>
+            <description>Number of pixels to increase/decrease window width</description>
+        </key>
+
+        <key name="increment-height" type="i">
+            <default>50</default>
+            <summary>Height Increment</summary>
+            <description>Number of pixels to increase/decrease window height</description>
+        </key>
+
+        <key name="increment-increase" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;Up']</default>
+            <summary>Increase Size</summary>
+            <description>Keyboard shortcut to increase window size by the configured increment</description>
+        </key>
+
+        <key name="increment-decrease" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;Down']</default>
+            <summary>Decrease Size</summary>
+            <description>Keyboard shortcut to decrease window size by the configured increment</description>
+        </key>
+
     </schema>
 </schemalist>
 

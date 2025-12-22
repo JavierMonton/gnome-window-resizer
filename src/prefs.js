@@ -340,6 +340,55 @@ export default class WindowResizerPreferences extends ExtensionPreferences {
         this._addShortcutRow(cycleGroup, 'Cycle Previous', 'cycle-previous',
             'Go to the previous size in the list');
 
+        // ===== Incremental Resize Group =====
+        const incrementGroup = new Adw.PreferencesGroup({
+            title: 'Incremental Resize',
+            description: 'Grow or shrink windows by a fixed amount',
+        });
+        page.add(incrementGroup);
+
+        // Width increment
+        const widthIncrementRow = new Adw.SpinRow({
+            title: 'Width Increment',
+            subtitle: 'Pixels to add/remove from width',
+            adjustment: new Gtk.Adjustment({
+                lower: 1,
+                upper: 500,
+                step_increment: 5,
+                page_increment: 25,
+                value: this._settings.get_int('increment-width'),
+            }),
+        });
+        widthIncrementRow.adjustment.connect('value-changed', () => {
+            this._settings.set_int('increment-width', widthIncrementRow.adjustment.value);
+        });
+        incrementGroup.add(widthIncrementRow);
+
+        // Height increment
+        const heightIncrementRow = new Adw.SpinRow({
+            title: 'Height Increment',
+            subtitle: 'Pixels to add/remove from height',
+            adjustment: new Gtk.Adjustment({
+                lower: 1,
+                upper: 500,
+                step_increment: 5,
+                page_increment: 25,
+                value: this._settings.get_int('increment-height'),
+            }),
+        });
+        heightIncrementRow.adjustment.connect('value-changed', () => {
+            this._settings.set_int('increment-height', heightIncrementRow.adjustment.value);
+        });
+        incrementGroup.add(heightIncrementRow);
+
+        // Increase shortcut
+        this._addShortcutRow(incrementGroup, 'Increase Size', 'increment-increase',
+            'Make window larger by the increment');
+
+        // Decrease shortcut
+        this._addShortcutRow(incrementGroup, 'Decrease Size', 'increment-decrease',
+            'Make window smaller by the increment');
+
         // ===== Direct Shortcuts Group =====
         const directGroup = new Adw.PreferencesGroup({
             title: 'Direct Size Shortcuts',
@@ -369,22 +418,13 @@ export default class WindowResizerPreferences extends ExtensionPreferences {
     }
 
     _populateSizes() {
-        // Remove existing size rows
-        let child = this._sizesGroup.get_first_child();
-        const toRemove = [];
-        while (child) {
-            if (child instanceof SizeRow || child.constructor.name === 'AdwActionRow') {
-                // Check if it's a size row or empty state row
-                const title = child.title;
-                if (title && (title.startsWith('Size ') || title === 'No sizes configured')) {
-                    toRemove.push(child);
-                }
+        // Remove existing size rows that we've tracked
+        if (this._sizeRows) {
+            for (const row of this._sizeRows) {
+                this._sizesGroup.remove(row);
             }
-            child = child.get_next_sibling();
         }
-        for (const row of toRemove) {
-            this._sizesGroup.remove(row);
-        }
+        this._sizeRows = [];
 
         // Add current sizes
         const sizes = this._settings.get_strv('size-presets');
@@ -396,6 +436,7 @@ export default class WindowResizerPreferences extends ExtensionPreferences {
                 (idx, w, h) => this._showEditDialog(idx, w, h)
             );
             this._sizesGroup.add(row);
+            this._sizeRows.push(row);
         });
 
         // Show hint if no sizes
@@ -408,6 +449,7 @@ export default class WindowResizerPreferences extends ExtensionPreferences {
                 icon_name: 'dialog-information-symbolic',
             }));
             this._sizesGroup.add(emptyRow);
+            this._sizeRows.push(emptyRow);
         }
     }
 
