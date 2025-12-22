@@ -1,0 +1,57 @@
+name: Release Extension
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libglib2.0-bin gettext zip
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          # Get version from tag (e.g., v2 -> 2)
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version in metadata.json
+        run: |
+          # Update version number in metadata.json
+          sed -i 's/"version": [0-9]*/"version": ${{ steps.version.outputs.version }}/' metadata.json
+
+      - name: Build extension
+        run: make build
+
+      - name: Create extension package
+        run: |
+          make package
+          # Rename to include version
+          mv gnome-window-resizer-v*.zip gnome-window-resizer-v${{ steps.version.outputs.version }}.zip
+
+      - name: Upload artifact to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: gnome-window-resizer-v${{ steps.version.outputs.version }}.zip
+
+      - name: Publish to GNOME Extensions
+        if: ${{ vars.PUBLISH_TO_EGO == 'true' }}
+        env:
+          EGO_USERNAME: ${{ secrets.EGO_USERNAME }}
+          EGO_PASSWORD: ${{ secrets.EGO_PASSWORD }}
+        run: |
+          # Install ego-upload tool
+          pip install gnome-extensions-cli
+          
+          # Upload to extensions.gnome.org
+          gext upload gnome-window-resizer-v${{ steps.version.outputs.version }}.zip
+
