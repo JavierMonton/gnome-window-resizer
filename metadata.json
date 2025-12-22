@@ -1,0 +1,13 @@
+{
+    "name": "Window Resizer",
+    "description": "Resize the focused window to predefined sizes using keyboard shortcuts. Cycle through sizes or jump directly to specific presets.",
+    "uuid": "gnome-window-resizer@javiermonton.github.io",
+    "shell-version": [
+        "45",
+        "46",
+        "47"
+    ],
+    "version": 1,
+    "url": "https://github.com/JavierMonton/gnome-window-resizer",
+    "settings-schema": "org.gnome.shell.extensions.gnome-window-resizer"
+}

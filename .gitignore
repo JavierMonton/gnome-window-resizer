@@ -1,0 +1,20 @@
+# Compiled schemas
+src/schemas/gschemas.compiled
+
+# Build artifacts
+*.zip
+dist/
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node (if using any build tools)
+node_modules/

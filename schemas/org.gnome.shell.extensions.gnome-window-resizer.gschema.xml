@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gnome-window-resizer">
+    <schema id="org.gnome.shell.extensions.gnome-window-resizer" path="/org/gnome/shell/extensions/gnome-window-resizer/">
+        
+        <!-- Size Presets: Array of strings in "WIDTHxHEIGHT" format -->
+        <key name="size-presets" type="as">
+            <default>['1000x500', '1000x1000', '1920x1080']</default>
+            <summary>Window Size Presets</summary>
+            <description>List of predefined window sizes in WIDTHxHEIGHT format (e.g., "1000x500")</description>
+        </key>
+
+        <!-- Cycle Forward Shortcut -->
+        <key name="cycle-next" type="as">
+            <default>['&lt;Super&gt;&lt;Alt&gt;Right']</default>
+            <summary>Cycle to Next Size</summary>
+            <description>Keyboard shortcut to resize the focused window to the next predefined size</description>
+        </key>
+
+        <!-- Cycle Backward Shortcut -->
+        <key name="cycle-previous" type="as">
+            <default>['&lt;Super&gt;&lt;Alt&gt;Left']</default>
+            <summary>Cycle to Previous Size</summary>
+            <description>Keyboard shortcut to resize the focused window to the previous predefined size</description>
+        </key>
+
+        <!-- Direct Access Shortcuts (1-9) -->
+        <key name="size-1" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;1']</default>
+            <summary>Resize to Size 1</summary>
+            <description>Keyboard shortcut to resize the focused window to the first predefined size</description>
+        </key>
+
+        <key name="size-2" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;2']</default>
+            <summary>Resize to Size 2</summary>
+            <description>Keyboard shortcut to resize the focused window to the second predefined size</description>
+        </key>
+
+        <key name="size-3" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;3']</default>
+            <summary>Resize to Size 3</summary>
+            <description>Keyboard shortcut to resize the focused window to the third predefined size</description>
+        </key>
+
+        <key name="size-4" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;4']</default>
+            <summary>Resize to Size 4</summary>
+            <description>Keyboard shortcut to resize the focused window to the fourth predefined size</description>
+        </key>
+
+        <key name="size-5" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;5']</default>
+            <summary>Resize to Size 5</summary>
+            <description>Keyboard shortcut to resize the focused window to the fifth predefined size</description>
+        </key>
+
+        <key name="size-6" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;6']</default>
+            <summary>Resize to Size 6</summary>
+            <description>Keyboard shortcut to resize the focused window to the sixth predefined size</description>
+        </key>
+
+        <key name="size-7" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;7']</default>
+            <summary>Resize to Size 7</summary>
+            <description>Keyboard shortcut to resize the focused window to the seventh predefined size</description>
+        </key>
+
+        <key name="size-8" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;8']</default>
+            <summary>Resize to Size 8</summary>
+            <description>Keyboard shortcut to resize the focused window to the eighth predefined size</description>
+        </key>
+
+        <key name="size-9" type="as">
+            <default>['&lt;Control&gt;&lt;Alt&gt;9']</default>
+            <summary>Resize to Size 9</summary>
+            <description>Keyboard shortcut to resize the focused window to the ninth predefined size</description>
+        </key>
+
+    </schema>
+</schemalist>
+
