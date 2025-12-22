@@ -123,15 +123,6 @@ Or filter for just this extension:
 journalctl -f -o cat /usr/bin/gnome-shell | grep "Window Resizer"
 ```
 
-## Publishing to extensions.gnome.org
-
-1. Create the package: `make package`
-2. Go to [extensions.gnome.org](https://extensions.gnome.org)
-3. Create an account or log in
-4. Click "Upload Extension"
-5. Upload the generated `.zip` file
-6. Fill in description and submit for review (typically 1-2 weeks)
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -143,4 +134,4 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 ## Acknowledgments
 
 - Built for the GNOME desktop environment
-- Inspired by the frustration of tiling extensions resizing windows unexpectedly
+- Inspired by the frustration of tiling extensions resizing windows unexpectedly after leaving the layouts.
