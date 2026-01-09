@@ -7,8 +7,17 @@ A GNOME Shell extension that allows you to quickly resize windows to predefined 
 - **Predefined Window Sizes**: Define custom window dimensions (e.g., 1000×500, 1920×1080)
 - **Cycle Through Sizes**: Use shortcuts to cycle forward/backward through your sizes
 - **Direct Size Shortcuts**: Jump directly to any size using Ctrl+Alt+1 through Ctrl+Alt+9
+- **Small increments**: **Resize windows in small pixel increments using shortcuts**
 - **Visual Settings UI**: Configure everything through GNOME's extension preferences
 - **Wayland Compatible**: Works perfectly on both X11 and Wayland
+
+### Cycle Through Sizes
+![Window Resizer Cycling Config](./static/config_sizes.png)
+![Window Resizer Cycling](./static/sizes.gif)
+
+### Small increments
+![Window Resizer Increments Config](./static/config_increments.png)
+![Window Resizer Increments](./static/increments.gif)
 
 ## Installation
 
