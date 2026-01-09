@@ -12,12 +12,13 @@ A GNOME Shell extension that allows you to quickly resize windows to predefined 
 - **Wayland Compatible**: Works perfectly on both X11 and Wayland
 
 ### Cycle Through Sizes
-<img src="./static/config_sizes.png" width="300" alt="Window Resizer Cycling Config"/>
-![Window Resizer Cycling Config](./static/config_sizes.png)
+<img src="./static/config_sizes.png" width="300" alt="Window Resizer Cycling Config">
+
 ![Window Resizer Cycling](./static/sizes.gif)
 
 ### Small increments
-![Window Resizer Increments Config](./static/config_increments.png)
+<img src="./static/config_increments.png" width="300" alt="Window Resizer Increments Config">
+
 ![Window Resizer Increments](./static/increments.gif)
 
 ## Installation
