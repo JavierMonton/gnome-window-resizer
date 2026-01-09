@@ -67,7 +67,6 @@ uninstall:
 # Create ZIP package for extensions.gnome.org
 package: build
 	@echo "Creating extension package..."
-	@mkdir -p $(BUILD_DIR)/$(UUID)
 	@mkdir -p $(BUILD_DIR)/$(UUID)/schemas
 	@cp metadata.json $(BUILD_DIR)/$(UUID)/
 	@cp $(SRC_DIR)/extension.js $(BUILD_DIR)/$(UUID)/
@@ -75,7 +74,7 @@ package: build
 	@cp $(SRC_DIR)/stylesheet.css $(BUILD_DIR)/$(UUID)/
 	@cp $(SCHEMA_DIR)/*.xml $(BUILD_DIR)/$(UUID)/schemas/
 	@cp $(SCHEMA_DIR)/gschemas.compiled $(BUILD_DIR)/$(UUID)/schemas/
-	@cd $(BUILD_DIR) && zip -r ../$(NAME)-v$(VERSION).zip $(UUID)
+	@cd $(BUILD_DIR)/$(UUID) && zip -r ../../$(NAME)-v$(VERSION).zip .
 	@rm -rf $(BUILD_DIR)/$(UUID)
 	@echo "Package created: $(NAME)-v$(VERSION).zip"
 
