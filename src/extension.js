@@ -266,8 +266,6 @@ export default class WindowResizerExtension extends Extension {
             size.width,
             size.height
         );
-
-        console.log(`[Window Resizer] Resized to ${size.width}x${size.height}`);
     }
 
     /**
@@ -284,6 +282,5 @@ export default class WindowResizerExtension extends Extension {
     _onSizesChanged() {
         // Clear cached indices when sizes change
         this._windowSizeIndex.clear();
-        console.log('[Window Resizer] Sizes changed, cache cleared');
     }
 }

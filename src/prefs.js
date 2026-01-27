@@ -297,6 +297,14 @@ export default class WindowResizerPreferences extends ExtensionPreferences {
         this._settings = this.getSettings();
         this._window = window;
 
+        // Clean up references when window closes to allow garbage collection
+        window.connect('close-request', () => {
+            this._settings = null;
+            this._window = null;
+            this._sizesGroup = null;
+            this._sizeRows = null;
+        });
+
         window.set_default_size(550, 700);
 
         // Create main page

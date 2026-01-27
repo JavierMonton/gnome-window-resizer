@@ -100,8 +100,7 @@ gnome-window-resizer/
 ├── metadata.json          # Extension metadata
 ├── src/
 │   ├── extension.js       # Main extension logic
-│   ├── prefs.js           # Preferences UI (GTK4/Adwaita)
-│   └── stylesheet.css     # Custom styles
+│   └── prefs.js           # Preferences UI (GTK4/Adwaita)
 ├── schemas/               # GSettings schema
 ├── Makefile               # Build system
 └── README.md

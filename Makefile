@@ -25,7 +25,6 @@ EXTENSION_FILES = \
 	metadata.json \
 	$(SRC_DIR)/extension.js \
 	$(SRC_DIR)/prefs.js \
-	$(SRC_DIR)/stylesheet.css \
 	$(SCHEMA_DIR)/org.gnome.shell.extensions.$(NAME).gschema.xml
 
 .PHONY: all build install uninstall package clean test reload help
@@ -48,9 +47,7 @@ install: build
 	@cp metadata.json $(INSTALL_DIR)/
 	@cp $(SRC_DIR)/extension.js $(INSTALL_DIR)/
 	@cp $(SRC_DIR)/prefs.js $(INSTALL_DIR)/
-	@cp $(SRC_DIR)/stylesheet.css $(INSTALL_DIR)/
 	@cp $(SCHEMA_DIR)/*.xml $(INSTALL_DIR)/schemas/
-	@cp $(SCHEMA_DIR)/gschemas.compiled $(INSTALL_DIR)/schemas/
 	@echo "Installation complete!"
 	@echo ""
 	@echo "To enable the extension:"
@@ -71,9 +68,7 @@ package: build
 	@cp metadata.json $(BUILD_DIR)/$(UUID)/
 	@cp $(SRC_DIR)/extension.js $(BUILD_DIR)/$(UUID)/
 	@cp $(SRC_DIR)/prefs.js $(BUILD_DIR)/$(UUID)/
-	@cp $(SRC_DIR)/stylesheet.css $(BUILD_DIR)/$(UUID)/
 	@cp $(SCHEMA_DIR)/*.xml $(BUILD_DIR)/$(UUID)/schemas/
-	@cp $(SCHEMA_DIR)/gschemas.compiled $(BUILD_DIR)/$(UUID)/schemas/
 	@cd $(BUILD_DIR)/$(UUID) && zip -r ../../$(NAME)-v$(VERSION).zip .
 	@rm -rf $(BUILD_DIR)/$(UUID)
 	@echo "Package created: $(NAME)-v$(VERSION).zip"
