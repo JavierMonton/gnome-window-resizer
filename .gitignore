@@ -1,5 +1,6 @@
 # Compiled schemas
-src/schemas/gschemas.compiled
+schemas/gschemas.compiled
+
 
 # Build artifacts
 *.zip

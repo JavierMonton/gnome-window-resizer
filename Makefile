@@ -48,6 +48,7 @@ install: build
 	@cp $(SRC_DIR)/extension.js $(INSTALL_DIR)/
 	@cp $(SRC_DIR)/prefs.js $(INSTALL_DIR)/
 	@cp $(SCHEMA_DIR)/*.xml $(INSTALL_DIR)/schemas/
+	@glib-compile-schemas $(INSTALL_DIR)/schemas/
 	@echo "Installation complete!"
 	@echo ""
 	@echo "To enable the extension:"
