@@ -5,7 +5,9 @@
     "shell-version": [
         "45",
         "46",
-        "47"
+        "47",
+        "48",
+        "49"
     ],
     "url": "https://github.com/JavierMonton/gnome-window-resizer",
     "settings-schema": "org.gnome.shell.extensions.gnome-window-resizer"

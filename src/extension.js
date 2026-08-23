@@ -1,6 +1,6 @@
 /**
  * GNOME Window Resizer Extension
- * 
+ *
  * Allows users to resize the focused window to predefined sizes
  * using keyboard shortcuts. Supports cycling through sizes and
  * direct shortcuts for each size.
@@ -251,8 +251,20 @@ export default class WindowResizerExtension extends Extension {
      */
     _applySize(window, size) {
         // Unmaximize if maximized
-        if (window.get_maximized()) {
-            window.unmaximize(Meta.MaximizeFlags.BOTH);
+        // Note: add backwards compatibility for GNOME < 49, since get_maximized() was removed and unmaximize() arguments changed
+        // @see [Port Extensions to GNOME Shell 49](https://gjs.guide/extensions/upgrading/gnome-shell-49.html#meta-window)
+        const isMaximized = typeof window.is_maximized === 'function'
+            ? window.is_maximized()
+            : window.get_maximized() !== 0;
+
+        if (isMaximized) {
+            if (typeof window.is_maximized === 'function') {
+                // GNOME Shell 49
+                window.unmaximize();
+            } else {
+                // Backwards compatibility
+                window.unmaximize(Meta.MaximizeFlags.BOTH);
+            }
         }
 
         // Get current position to keep the window in place

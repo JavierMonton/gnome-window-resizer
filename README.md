@@ -72,7 +72,7 @@ gnome-extensions enable gnome-window-resizer@javiermonton.github.io
 
 The extension comes with three default sizes:
 - 1000 × 500 pixels
-- 1000 × 1000 pixels  
+- 1000 × 1000 pixels
 - 1920 × 1080 pixels
 
 ## How It Works
@@ -86,7 +86,7 @@ The extension remembers your current position in the size cycle for each window,
 
 ## Compatibility
 
-- GNOME Shell 45, 46, 47
+- GNOME Shell 45, 46, 47, 48, 49
 - Ubuntu 24.04+
 - Fedora 39+
 - Any distribution with GNOME 45+
