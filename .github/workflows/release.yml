@@ -47,11 +47,16 @@ jobs:
           files: gnome-window-resizer-v${{ steps.version.outputs.version }}.zip
 
       - name: Publish to GNOME Extensions
-        if: ${{ secrets.EGO_USERNAME != '' && secrets.EGO_PASSWORD != '' }}
         env:
           GEP_USERNAME: ${{ secrets.EGO_USERNAME }}
           GEP_PASSWORD: ${{ secrets.EGO_PASSWORD }}
         run: |
+          # Skip when EGO credentials are not configured in repo secrets
+          if [ -z "$GEP_USERNAME" ] || [ -z "$GEP_PASSWORD" ]; then
+            echo "EGO_USERNAME/EGO_PASSWORD secrets not set, skipping publish"
+            exit 0
+          fi
+
           # Install upload tool (pipx avoids PEP 668 restrictions on the runner)
           pipx install gnome-extension-publisher
 
