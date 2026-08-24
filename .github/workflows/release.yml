@@ -48,18 +48,46 @@ jobs:
 
       - name: Publish to GNOME Extensions
         env:
-          GEP_USERNAME: ${{ secrets.EGO_USERNAME }}
-          GEP_PASSWORD: ${{ secrets.EGO_PASSWORD }}
+          EGO_USERNAME: ${{ secrets.EGO_USERNAME }}
+          EGO_PASSWORD: ${{ secrets.EGO_PASSWORD }}
         run: |
           # Skip when EGO credentials are not configured in repo secrets
-          if [ -z "$GEP_USERNAME" ] || [ -z "$GEP_PASSWORD" ]; then
+          if [ -z "$EGO_USERNAME" ] || [ -z "$EGO_PASSWORD" ]; then
             echo "EGO_USERNAME/EGO_PASSWORD secrets not set, skipping publish"
             exit 0
           fi
 
-          # Install upload tool (pipx avoids PEP 668 restrictions on the runner)
-          pipx install gnome-extension-publisher
+          # Official EGO API (https://extensions.gnome.org/api/docs/)
+          LOGIN_URL="https://extensions.gnome.org/api/v1/accounts/login/"
+          UPLOAD_URL="https://extensions.gnome.org/api/v1/extensions"
+          ZIP_FILE="gnome-window-resizer-v${{ steps.version.outputs.version }}.zip"
 
-          # Upload to extensions.gnome.org (lands in the review queue)
-          gep publisharchive --file gnome-window-resizer-v${{ steps.version.outputs.version }}.zip
+          # Authenticate and get an API token
+          TOKEN=$(curl -sSf -X POST \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -H "Accept: application/json" \
+            --data-urlencode "login=${EGO_USERNAME}" \
+            --data-urlencode "password=${EGO_PASSWORD}" \
+            "$LOGIN_URL" | jq -r '.token.token // empty')
+
+          if [ -z "$TOKEN" ]; then
+            echo "::error::EGO login failed - check EGO_USERNAME/EGO_PASSWORD secrets"
+            exit 1
+          fi
+
+          # Submit the zip for review (same checkboxes as the web upload form)
+          HTTP_CODE=$(curl -s -o ego_response.json -w "%{http_code}" -X POST \
+            -H "Authorization: Token ${TOKEN}" \
+            -F "source=@${ZIP_FILE}" \
+            -F "shell_license_compliant=true" \
+            -F "tos_compliant=true" \
+            "$UPLOAD_URL")
+
+          if [ "$HTTP_CODE" != "201" ]; then
+            echo "::error::EGO upload failed (HTTP ${HTTP_CODE}):"
+            cat ego_response.json
+            exit 1
+          fi
+
+          echo "Extension submitted to extensions.gnome.org (pending review)"
 
